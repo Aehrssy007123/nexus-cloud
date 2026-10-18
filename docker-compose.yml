@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # MongoDB Database for User & Metadata Storage
+  mongodb:
+    image: mongo:7.0
+    container_name: nexus-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=nexus_cloud
+    volumes:
+      - mongodb_data:/data/db
+
+  # Apache Hadoop NameNode with WebHDFS enabled
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: nexus-namenode
+    restart: unless-stopped
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+    environment:
+      - CLUSTER_NAME=nexus-cluster
+      - HDFS_CONF_dfs_webhdfs_enabled=true
+      - HDFS_CONF_dfs_permissions_enabled=false
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+
+  # Apache Hadoop DataNode
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: nexus-datanode
+    restart: unless-stopped
+    depends_on:
+      - namenode
+    ports:
+      - "9864:9864"
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+      - HDFS_CONF_dfs_webhdfs_enabled=true
+      - HDFS_CONF_dfs_permissions_enabled=false
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+
+  # Cloud Controller Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nexus-backend
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - namenode
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/nexus_cloud
+      - HDFS_URL=http://namenode:9870/webhdfs/v1
+      - HDFS_USER=hdfs
+      - JWT_SECRET=nexus_cloud_production_secret_key_2026
+
+  # Frontend Web UI
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nexus-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+
+volumes:
+  mongodb_data:
+  hadoop_namenode:
+  hadoop_datanode:

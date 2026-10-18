@@ -1,0 +1,1 @@
+Hello HDFS! This file is stored across Apache Hadoop distributed blocks via NEXUS CLOUD.

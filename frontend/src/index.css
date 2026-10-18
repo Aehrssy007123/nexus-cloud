@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-graphite: #171816;
+    --color-charcoal: #22231F;
+    --color-elevated: #2B2C27;
+    --color-orange: #D97736;
+    --color-amber: #E9A65A;
+    --color-ivory: #F4F0E8;
+    --color-stone: #AAA69B;
+    --color-sage: #8EA58A;
+    --color-border: #393A33;
+  }
+
+  * {
+    border-color: #393A33;
+  }
+
+  body {
+    background-color: #171816;
+    color: #F4F0E8;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Force outline / focus rings to burnt orange or soft border - NO BLUE EVER */
+  *:focus-visible {
+    outline: 2px solid #D97736 !important;
+    outline-offset: 1px !important;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #171816;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #393A33;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D97736;
+  }
+}
+
+/* Custom UI utilities */
+.nexus-card {
+  background: #2B2C27;
+  border: 1px solid #393A33;
+  border-radius: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nexus-card:hover {
+  border-color: #4E5046;
+}
+
+.nexus-btn-primary {
+  background: linear-gradient(135deg, #D97736 0%, #E9A65A 100%);
+  color: #171816;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(217, 119, 54, 0.2);
+}
+
+.nexus-btn-primary:hover:not(:disabled) {
+  opacity: 0.94;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 119, 54, 0.3);
+}
+
+.nexus-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.nexus-btn-secondary {
+  background: #2B2C27;
+  color: #F4F0E8;
+  border: 1px solid #393A33;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.nexus-btn-secondary:hover:not(:disabled) {
+  background: #353630;
+  border-color: #4E5046;
+  color: #F4F0E8;
+}
+
+.nexus-input {
+  background: #22231F;
+  border: 1px solid #393A33;
+  color: #F4F0E8;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.nexus-input::placeholder {
+  color: #AAA69B;
+  opacity: 0.7;
+}
+
+.nexus-input:focus {
+  border-color: #D97736;
+  outline: none;
+  box-shadow: 0 0 0 1px #D97736;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.97); }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
